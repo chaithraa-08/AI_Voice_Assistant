@@ -1,0 +1,6 @@
+.history/
+.env
+__pycache__/
+*.pyc
+*.mp3
+.vscode/
