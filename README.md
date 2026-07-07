@@ -73,40 +73,6 @@ AI_Voice_Assistant/
 
 ---
 
-## ⚙️ Installation
-
-### Clone the repository
-
-```bash
-git clone https://github.com/chaithraa-08/AI_Voice_Assistant.git
-```
-
-### Move into the project directory
-
-```bash
-cd AI_Voice_Assistant
-```
-
-### Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Create a `.env` file
-
-```env
-GROQ_API_KEY=YOUR_API_KEY
-```
-
-### Run the assistant
-
-```bash
-python voice_chat.py
-```
-
----
-
 ## 📸 Screenshots
 
 > Screenshots will be added as development progresses.
@@ -129,21 +95,6 @@ python voice_chat.py
 - [ ] Emotion Detection
 
 ---
-
-## 🤝 Contributing
-
-Contributions, feature requests, and suggestions are welcome.
-
-Feel free to fork the repository and submit a pull request.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
 ## 👨‍💻 Author
 
 **Chaithra**
