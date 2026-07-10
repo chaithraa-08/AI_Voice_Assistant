@@ -88,7 +88,7 @@ AI_Voice_Assistant/
 - [x] Calculator
 - [x] Search Tool
 - [x] Application Launcher
-- [ ] Multi-Agent System
+- [x] Multi-Agent System
 - [ ] Streamlit UI
 - [ ] Long-Term Memory
 - [ ] Voice Authentication
