@@ -2,11 +2,9 @@ from agents.manager import Manager
 
 manager = Manager()
 
-query = input("You: ")
+user_query = input("You: ")
 
-result = manager.process(query)
+response = manager.process(user_query)
 
 print("\nAssistant:\n")
-
-for r in result:
-    print(r)
+print(response["response"])

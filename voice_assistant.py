@@ -69,23 +69,9 @@ while True:
         # Process
         # -------------------------
 
-        results = manager.process(user_query)
+        response = manager.process(user_query)
 
-        # -------------------------
-        # Speak Results
-        # -------------------------
-
-        reply = ""
-
-        for result in results:
-
-            if result["status"] == "success":
-
-                reply += str(result["result"]) + " "
-
-            else:
-
-                reply += result["message"] + " "
+        reply = response["response"]
 
         print("\nAssistant:", reply)
 
