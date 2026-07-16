@@ -89,8 +89,8 @@ AI_Voice_Assistant/
 - [x] Search Tool
 - [x] Application Launcher
 - [x] Multi-Agent System
-- [ ] Streamlit UI
-- [ ] Long-Term Memory
+- [x] Streamlit UI
+- [x] Long-Term Memory
 - [ ] Voice Authentication
 - [ ] Emotion Detection
 
