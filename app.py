@@ -1,5 +1,8 @@
+print("APP.PY IS EXECUTING")
 import streamlit as st
 from agents.manager import Manager
+from memory.database import initialize_database
+from ui.styles import load_css
 
 import asyncio
 
@@ -12,17 +15,17 @@ import asyncio
 st.set_page_config(
     page_title="AI Voice Assistant",
     page_icon="🤖",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
+
+#load_css()
 
 # -------------------------
 # Initialize Manager
 # -------------------------
-@st.cache_resource
-def load_manager():
-    return Manager()
-
-manager = load_manager()
+initialize_database()
+manager = Manager()
 
 # -------------------------
 # Session State
@@ -35,41 +38,88 @@ if "messages" not in st.session_state:
 # -------------------------
 with st.sidebar:
 
-    st.title("🤖 AI Voice Assistant")
+    st.markdown("# 🤖 AI Assistant")
 
-    st.write("### Features")
-    st.header("Project Status")
+    st.caption("Multi-Agent Voice Assistant")
 
-    st.success("Phase 1 ✔ Chatbot")
+    st.divider()
 
-    st.success("Phase 2 ✔ Memory")
+    # -----------------------------
+    # Chat Controls
+    # -----------------------------
+    st.subheader("💬 Chat")
 
-    st.success("Phase 3 ✔ Speech to Text")
+    if st.button("🆕 New Chat", use_container_width=True):
+        st.session_state.messages = []
+        st.rerun()
 
-    st.success("Phase 4 ✔ Text to Speech")
-
-    st.success("Phase 5 ✔ Tools")
-
-    st.success("Phase 6 ✔ Multi-Agent")
-
-    st.info("Phase 7 🔄 Streamlit UI")
-
-    if st.button("🗑 Clear Chat"):
+    if st.button("🗑 Clear Chat", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
     st.divider()
 
-    st.caption("Developed by Chaithra")
+    # -----------------------------
+    # Voice
+    # -----------------------------
+    st.subheader("🎤 Voice")
 
-    st.caption("Groq • Streamlit • Multi-Agent AI")
+    voice_enabled = st.toggle(
+        "Enable Voice",
+        value=True,
+        disabled=True
+    )
+
+    st.divider()
+
+    # -----------------------------
+    # Statistics
+    # -----------------------------
+    st.subheader("📊 Statistics")
+
+    st.metric(
+        "Messages",
+        len(st.session_state.messages)
+    )
+
+    st.divider()
+
+    # -----------------------------
+    # About
+    # -----------------------------
+    st.subheader("ℹ About")
+
+    st.caption("Version 1.0")
+
+    st.caption("Built with")
+
+    st.write("• Streamlit")
+
+    st.write("• Groq")
+
+    st.write("• Multi-Agent AI")
+
+    st.write("• Whisper")
+
+    st.divider()
+
+    st.caption("👨‍💻 Developed by Chaithra")
 
 # -------------------------
 # Main Page
 # -------------------------
-st.title("🤖 AI Voice Assistant")
+st.markdown(
+    """
+    <div class="main-title">
+        🤖 AI Voice Assistant
+    </div>
 
-st.caption("Powered by Groq + Multi-Agent AI")
+    <div class="subtitle">
+        Multi-Agent • Voice Enabled • Powered by Groq
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # -------------------------
 # Display Chat
