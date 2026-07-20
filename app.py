@@ -9,6 +9,8 @@ import asyncio
 # from speech_to_text import listen
 # from tts import speak
 
+from voice_auth.auth import verify_user
+
 # -------------------------
 # Page Configuration
 # -------------------------
@@ -26,6 +28,24 @@ st.set_page_config(
 # -------------------------
 initialize_database()
 manager = Manager()
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+
+    st.title("🔐 Voice Authentication")
+
+    if st.button("Verify Voice"):
+
+        if verify_user():
+            st.session_state.authenticated = True
+            st.success("Authentication Successful!")
+            st.rerun()
+        else:
+            st.error("Authentication Failed!")
+
+    st.stop()
 
 # -------------------------
 # Session State

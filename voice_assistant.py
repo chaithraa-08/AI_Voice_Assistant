@@ -1,8 +1,9 @@
 import asyncio
 import pygame
 import edge_tts
+from voice_auth.auth import verify_user
 
-from speech_to_text import listen
+from speech_to_text import listen,listen_for_wake_word
 from agents.manager import Manager
 
 
@@ -35,6 +36,16 @@ async def speak(text):
 # Initialize Manager
 # -------------------------
 
+print("=" * 50)
+print("🔐 Voice Authentication")
+print("=" * 50)
+
+if not verify_user():
+    print("Access Denied!")
+    exit()
+
+print("Access Granted!")
+
 manager = Manager()
 
 print("=" * 50)
@@ -50,6 +61,15 @@ while True:
         # -------------------------
         # Listen
         # -------------------------
+
+        print("Waiting for wake word...")
+
+        while not listen_for_wake_word():
+            pass
+
+        print("Wake word detected!")
+
+        asyncio.run(speak("Yes?"))
 
         user_query, language = listen()
 
