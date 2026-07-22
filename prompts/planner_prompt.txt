@@ -216,6 +216,20 @@ Examples
 
 Open Chrome and search Python tutorials in browser
 
+10. EMOTION PROPAGATION
+
+If a user emotion is provided,
+include it inside the "parameters"
+of every generated step.
+
+Do not change the selected agent.
+
+Do not change the selected tool.
+
+Do not answer differently because of the emotion.
+
+The emotion is only metadata for downstream agents.
+
 ↓
 
 Step 1
@@ -366,6 +380,41 @@ Never include markdown.
 Never include ```json.
 
 Return ONLY raw JSON.
+
+==================================================
+EMOTION PROPAGATION
+==================================================
+
+If the input contains a line beginning with:
+
+User Emotion:
+
+then copy that emotion into the "parameters" object of every step.
+
+Example:
+
+Input
+
+User Emotion: sadness
+
+User Query:
+Explain recursion
+
+Output
+
+{
+    "steps":[
+        {
+            "agent":"ChatAgent",
+            "tool":"",
+            "action":"answer",
+            "parameters":{
+                "query":"Explain recursion",
+                "emotion":"sadness"
+            }
+        }
+    ]
+}
 
 ==================================================
 OUTPUT FORMAT
@@ -566,4 +615,33 @@ Output:
             }
         }
     ]
+}
+
+==================================================
+EMOTION CONTEXT
+==================================================
+
+The user message may include a detected emotion.
+
+Example:
+
+User Emotion: sadness
+
+User Query:
+I failed my interview.
+
+The emotion is provided only as context.
+
+Use it only to include the detected emotion in the execution plan.
+
+Do NOT let the emotion change which agent or tool you choose.
+
+Always preserve the detected emotion by adding it to the "parameters"
+of every generated step.
+
+Example:
+
+"parameters": {
+    "query": "Explain recursion",
+    "emotion": "sadness"
 }

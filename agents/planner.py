@@ -29,7 +29,7 @@ class PlannerAgent:
 
         return response.strip()
 
-    def create_plan(self, user_query):
+    def create_plan(self, user_query,emotion=None):
 
         messages = [
             {
@@ -38,7 +38,12 @@ class PlannerAgent:
             },
             {
                 "role": "user",
-                "content": user_query
+                "content": f"""
+        User Emotion: {emotion if emotion else "unknown"}
+
+        User Query:
+        {user_query}
+        """
             }
         ]
 

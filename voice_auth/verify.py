@@ -79,7 +79,7 @@ score = similarity.item()
 
 print(f"\nSimilarity Score: {score:.4f}")
 
-THRESHOLD = 0.75
+THRESHOLD = 0.65
 
 if score > THRESHOLD:
     print("✅ Voice Verified")

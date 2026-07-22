@@ -1,16 +1,15 @@
 import asyncio
 import pygame
 import edge_tts
-from voice_auth.auth import verify_user
 
-from speech_to_text import listen,listen_for_wake_word
+from voice_auth.auth import verify_user
+from speech_to_text import listen
 from agents.manager import Manager
 
 
-# -------------------------
-# Text to Speech
-# -------------------------
-
+# -----------------------------------------
+# Text-to-Speech
+# -----------------------------------------
 async def speak(text):
 
     filename = "response.mp3"
@@ -23,7 +22,9 @@ async def speak(text):
     await communicate.save(filename)
 
     pygame.mixer.init()
+
     pygame.mixer.music.load(filename)
+
     pygame.mixer.music.play()
 
     while pygame.mixer.music.get_busy():
@@ -32,10 +33,9 @@ async def speak(text):
     pygame.mixer.quit()
 
 
-# -------------------------
-# Initialize Manager
-# -------------------------
-
+# -----------------------------------------
+# Voice Authentication
+# -----------------------------------------
 print("=" * 50)
 print("🔐 Voice Authentication")
 print("=" * 50)
@@ -46,6 +46,10 @@ if not verify_user():
 
 print("Access Granted!")
 
+
+# -----------------------------------------
+# Initialize Manager
+# -----------------------------------------
 manager = Manager()
 
 print("=" * 50)
@@ -54,30 +58,23 @@ print("Say 'exit' to stop.")
 print("=" * 50)
 
 
+# -----------------------------------------
+# Main Loop
+# -----------------------------------------
 while True:
 
     try:
 
-        # -------------------------
-        # Listen
-        # -------------------------
-
-        print("Waiting for wake word...")
-
-        while not listen_for_wake_word():
-            pass
-
-        print("Wake word detected!")
-
-        asyncio.run(speak("Yes?"))
-
-        user_query, language = listen()
+        user_query, language, emotion = listen()
 
         if not user_query:
+            print("⚠️ No speech detected.")
             continue
 
         print("\nYou:", user_query)
         print("Language:", language)
+        print("Emotion:", emotion["emotion"])
+        print("Confidence:", emotion["confidence"])
 
         if user_query.lower() == "exit":
 
@@ -85,11 +82,11 @@ while True:
 
             break
 
-        # -------------------------
-        # Process
-        # -------------------------
-
-        response = manager.process(user_query)
+        # Process User Query
+        response = manager.process(
+            user_query,
+            emotion
+        )
 
         reply = response["response"]
 
@@ -104,4 +101,4 @@ while True:
 
     except Exception as e:
 
-        print("Error:", e)
+        print("\n❌ Error:", e)

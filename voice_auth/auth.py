@@ -3,16 +3,13 @@ import torch
 import sounddevice as sd
 import soundfile as sf
 from scipy.io.wavfile import write
-from speechbrain.inference.speaker import EncoderClassifier
+
+classifier = None
 
 # Load SpeechBrain model only once
-classifier = EncoderClassifier.from_hparams(
-    source="speechbrain/spkrec-ecapa-voxceleb",
-    savedir="pretrained_models/spkrec-ecapa-voxceleb"
-)
 
 
-def verify_user(name="Chaithra", threshold=0.75):
+def verify_user(name="Chaithra", threshold=0.65):
     """
     Verify the speaker's voice.
 
@@ -20,6 +17,16 @@ def verify_user(name="Chaithra", threshold=0.75):
         True  -> Voice verified
         False -> Voice verification failed
     """
+
+    global classifier
+
+    if classifier is None:
+        from speechbrain.inference.speaker import EncoderClassifier
+
+        classifier = EncoderClassifier.from_hparams(
+            source="speechbrain/spkrec-ecapa-voxceleb",
+            savedir="pretrained_models/spkrec-ecapa-voxceleb"
+        )
 
     embedding_file = f"voice_profiles/{name}.pt"
 

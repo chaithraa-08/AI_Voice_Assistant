@@ -18,10 +18,14 @@ class Manager:
 
         self.memory = MemoryService()
 
-    def process(self, user_query):
+    def process(self, user_query, emotion=None):
 
         print("=" * 60)
         print("Manager received:", user_query)
+
+        # -------------------------
+        # Check Memory
+        # -------------------------
 
         memory_response = self.memory.process(user_query)
 
@@ -39,51 +43,91 @@ class Manager:
 
         print("No memory match. Going to Planner...")
 
-        # Get execution plan from planner
-        plan = self.planner.create_plan(user_query)
+        # -------------------------
+        # Planner
+        # -------------------------
+
+        plan = self.planner.create_plan(
+            user_query,
+            emotion["emotion"] if emotion else None
+        )
+
+        if not isinstance(plan, dict):
+
+            return {
+                "response": "Planner failed to generate a plan.",
+                "plan": [],
+                "results": []
+            }
+
+        steps = plan.get("steps", [])
+
+        # -------------------------
+        # Add Emotion
+        # -------------------------
+
+        if emotion:
+
+            for step in steps:
+
+                step.setdefault("parameters", {})
+                step["parameters"]["emotion"] = emotion["emotion"]
 
         results = []
         final_response = ""
 
-        # Execute each step
-        for step in plan["steps"]:
+        # -------------------------
+        # Execute Steps
+        # -------------------------
 
-            if step["agent"] == "ExecutorAgent":
+        for step in steps:
+
+            agent = step.get("agent")
+
+            if agent == "ExecutorAgent":
 
                 result = self.executor.execute(step)
-                print(result)
 
-            elif step["agent"] == "ResearchAgent":
+            elif agent == "ResearchAgent":
 
                 result = self.researcher.execute(step)
-                print(result)
 
-            elif step["agent"] == "ChatAgent":
+            elif agent == "ChatAgent":
 
                 result = self.chat.execute(step)
-                print(result)
 
             else:
 
                 result = {
                     "status": "info",
-                    "message": f"{step['agent']} not implemented."
+                    "message": f"{agent} not implemented."
                 }
+
+            print(result)
 
             results.append(result)
 
-            # Save the latest response returned by an agent
             if isinstance(result, dict):
+
                 if "result" in result:
                     final_response = result["result"]
+
                 elif "message" in result:
                     final_response = result["message"]
 
+        # -------------------------
+        # Save Conversation
+        # -------------------------
+
         if final_response:
-            self.memory.save_memory(user_query, final_response)
+
+            self.memory.save_memory(
+                user_query,
+                final_response
+            )
 
         return {
             "response": final_response,
-            "plan": plan["steps"],
+            "plan": steps,
             "results": results
         }
